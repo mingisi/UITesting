@@ -1,0 +1,17 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UITesting", "UITesting\UITesting.csproj", "{7DBA48E9-7D57-4CB5-B108-F9A420C8A41C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7DBA48E9-7D57-4CB5-B108-F9A420C8A41C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DBA48E9-7D57-4CB5-B108-F9A420C8A41C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DBA48E9-7D57-4CB5-B108-F9A420C8A41C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DBA48E9-7D57-4CB5-B108-F9A420C8A41C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
