@@ -67,14 +67,7 @@ namespace UITesting.Framework.UI.Controls
 
         public bool Exists(int timout)
         {
-            try
-            {
-                new WebDriverWait(Driver, TimeSpan.FromSeconds(timout))
-                    .Until(ExpectedConditions.ElementExists(this.locator));
-            }catch(WebDriverException){
-                return false;
-            }
-            return true;
+            return WaitUntil(ExpectedConditions.ElementExists(this.locator), timout);
         }
 
         public bool Exists(){
@@ -83,16 +76,7 @@ namespace UITesting.Framework.UI.Controls
 
         public bool Visible(int timout)
         {
-            try
-            {
-                new WebDriverWait(Driver, TimeSpan.FromSeconds(timout))
-                    .Until(ExpectedConditions.ElementIsVisible(this.locator));
-            }
-            catch (WebDriverException)
-            {
-                return false;
-            }
-            return true;
+            return WaitUntil(ExpectedConditions.ElementIsVisible(this.locator), timout);
         }
 
         public bool Visible()
@@ -100,6 +84,24 @@ namespace UITesting.Framework.UI.Controls
             return Visible(Configuration.Timeout);
         }
 
+        public bool Enabled(int timout)
+        {
+            return WaitUntil<bool>(c => { return this.Element.Enabled; }, timout);
+        }
+
+        public bool WaitUntil<T>(Func<IWebDriver , T> condition, int timout)
+        {
+            try
+            {
+                new WebDriverWait(this.Driver, TimeSpan.FromSeconds(timout))
+                    .Until(condition);
+            }
+            catch (WebDriverTimeoutException)
+            {
+                return false;
+            }
+            return true;
+        }
 
     }
 }

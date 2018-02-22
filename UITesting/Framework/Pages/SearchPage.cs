@@ -11,22 +11,22 @@ namespace UITesting.Framework.Pages
     public class SearchPage : Page
     {
 
-        [FindBy("css=#ss")]
+        [FindBy("css=#ss", Platform = TargetPlatform.ANY_WEB)]
         public Edit editDestination;
 
-        [FindBy("xpath=(//li[contains(@class, 'autocomplete__item')])[1]")]
+        [FindBy("xpath=(//li[contains(@class, 'autocomplete__item')])[1]", Platform = TargetPlatform.ANY_WEB)]
         public Control autoCompleteItem;
 
-        [FindBy("css=i.sb-date-field__chevron.bicon-downchevron")]
+        [FindBy("css=i.sb-date-field__chevron.bicon-downchevron", Platform = TargetPlatform.ANY_WEB)]
         public Control checkoutDayToday;
 
-        [FindBy("xpath=//input[@name='sb_travel_purpose']")]
+        [FindBy("xpath=//input[@name='sb_travel_purpose']", Platform = TargetPlatform.ANY_WEB)]
         public Control radioWork;
 
-        [FindBy("group_adults")]
+        [FindBy("group_adults", Platform = TargetPlatform.ANY_WEB)]
         public SelectList selectAdultNumber;
 
-        [FindBy("css=.sb-searchbox__button")]
+        [FindBy("css=.sb-searchbox__button", Platform = TargetPlatform.ANY_WEB)]
         public Control buttonSearch;
 
         public SearchPage(IWebDriver driver): base(driver)
@@ -35,8 +35,12 @@ namespace UITesting.Framework.Pages
 
         public override Page Navigate()
         {
-            String baseURL = Configuration.Get("BaseURL");
-            Driver.Navigate().GoToUrl(baseURL);
+            if (Configuration.Platform.IsWeb())
+            {
+                String baseURL = Configuration.Get("BaseURL");
+                Driver.Navigate().GoToUrl(baseURL);
+            }
+
             return this;
         }
     }

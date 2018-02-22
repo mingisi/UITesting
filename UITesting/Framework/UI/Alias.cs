@@ -1,10 +1,17 @@
 ﻿using System;
 namespace UITesting.Framework.UI
 {
-    public class Alias
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Class)]
+    public class Alias : Attribute
     {
-        public Alias()
+        public String Name
         {
+            get; set;
+        }
+
+        public Alias(String nameValue)
+        {
+            this.Name = nameValue;
         }
     }
 }

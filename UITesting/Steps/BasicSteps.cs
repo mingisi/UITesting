@@ -1,41 +1,62 @@
-﻿using System;
+﻿using TechTalk.SpecFlow;
+using NUnit.Framework;
+using System;
+using System.IO;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Chrome;
+using UITesting.Framework.Core;
+using UITesting.Framework.UI.Controls;
+using UITesting.Framework.UI;
+using UITesting.Framework.Pages;
 
-using TechTalk.SpecFlow;
 
 namespace UITesting.Steps
 {
     [Binding]
     public class BasicSteps
-    {
-        [Given("I have entered (.*) into the calculator")]
-        public void GivenIHaveEnteredSomethingIntoTheCalculator(int number)
+    {   
+        [Before]
+        public void Setup()
         {
-            // TODO: implement arrange (recondition) logic
-            // For storing and retrieving scenario-specific data, 
-            // the instance fields of the class or the
-            //     ScenarioContext.Current
-            // collection can be used.
-            // To use the multiline text or the table argument of the scenario,
-            // additional string/Table parameters can be defined on the step definition
-            // method. 
+            DesiredCapabilities capabilities = new DesiredCapabilities();
+            capabilities.SetCapability("app", "/Users/salim/mtk_projects/ED/shoot/shootapp-xamarin/src/ShootApp.Droid/bin/Release/com.gunsandgame.ShootApp.apk");
+            capabilities.SetCapability("platformVersion", "7.1.1");
+            capabilities.SetCapability("platformName", "Android");
+            capabilities.SetCapability("deviceName", "Any");
 
-            ScenarioContext.Current.Pending();
+            Driver.Add(Configuration.Platform, Configuration.DriverPath, capabilities);
+
         }
 
-        [When("I press add")]
-        public void WhenIPressAdd()
+        [After]
+        public void TearDown()
         {
-            // TODO: implement act (action) logic
-
-            ScenarioContext.Current.Pending();
+            Driver.Quit();
         }
 
-        [Then("the result should be (.*) on the screen")]
-        public void ThenTheResultShouldBe(int result)
+        [Given(@"^I on the on boading page$")]
+        public void startTheApp() 
         {
-            // TODO: implement assert (verification) logic
+            Console.WriteLine("runnnnnning the test.....");
+        }
 
-            ScenarioContext.Current.Pending();
+        [Given("^I am on the \"(.*)\" (?:page|screen)$")]
+        [When("^(?:I |)go to the \"(.*)\" (?:page|screen)$")]
+        public void NavigateToPage(String name)
+        {
+            Page target = Page.Screen(name);
+            Assert.NotNull(target, "Unable to find the '" + name + "' page.");
+            this.VerifyCurrentPage(name);
+        }
+
+   
+
+        [Then(@"^I should see the ""(.*)"" (?:page|screen)$")]
+        public void VerifyCurrentPage(String name)
+        {
+            
         }
     }
 }

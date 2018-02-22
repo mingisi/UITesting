@@ -9,6 +9,10 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Safari;
+using OpenQA.Selenium.Appium;
+using OpenQA.Selenium.Appium.Android;
+using OpenQA.Selenium.Appium.iOS;
+using UITesting.Framework.UI;
 
 namespace UITesting.Framework.Core
 {
@@ -20,57 +24,68 @@ namespace UITesting.Framework.Core
         {
         }
 
-        private static Dictionary<String, Type> driverMap = new Dictionary<String, Type>()
+        private static Dictionary<TargetPlatform, Type> driverMap = new Dictionary<TargetPlatform, Type>()
         {
-            {"chrome", typeof(ChromeDriver)},
-            {"firefox", typeof(FirefoxDriver)},
-            {"ie", typeof(InternetExplorerDriver)},
-            {"opera", typeof(OperaDriver)},
-            {"safari", typeof(SafariDriver)},
+            {TargetPlatform.CHROME, typeof(ChromeDriver)},
+            {TargetPlatform.FIREFOX, typeof(FirefoxDriver)},
+            {TargetPlatform.IE, typeof(InternetExplorerDriver)},
+            {TargetPlatform.OPERA, typeof(OperaDriver)},
+            {TargetPlatform.SAFARI, typeof(SafariDriver)},
+            {TargetPlatform.ANDROID_NATIVE, typeof(AndroidDriver<AppiumWebElement>)},
+            {TargetPlatform.IOS_NATIVE, typeof(IOSDriver<AppiumWebElement>)},
         };
 
-        private static Dictionary<String, Type> optionsMap = new Dictionary<String, Type>()
+        private static Dictionary<TargetPlatform, Type> optionsMap = new Dictionary<TargetPlatform, Type>()
         {
-            {"chrome", typeof(ChromeOptions)},
-            {"firefox", typeof(FirefoxOptions)},
-            {"ie", typeof(InternetExplorerOptions)},
-            {"opera", typeof(OperaOptions)},
-            {"safari", typeof(SafariOptions)},
+            {TargetPlatform.CHROME, typeof(ChromeOptions)},
+            {TargetPlatform.FIREFOX, typeof(FirefoxOptions)},
+            {TargetPlatform.IE, typeof(InternetExplorerOptions)},
+            {TargetPlatform.OPERA, typeof(OperaOptions)},
+            {TargetPlatform.SAFARI, typeof(SafariOptions)},
+
         };
 
 
-        private static String _getThreadName() {
+        public static String GetThreadName() {
             return Thread.CurrentThread.Name + Thread.CurrentThread.ManagedThreadId;
         }
 
-        public static void Add(String browser, String path, ICapabilities capabilities)
+        public static void Add(TargetPlatform platform, String path, ICapabilities capabilities)
         {
-            Type driverType = driverMap[browser];
-            DriverOptions options = (DriverOptions)optionsMap[browser].GetConstructor(new Type[] { }).Invoke(new Object[] { });
-            IWebDriver driver;
-            if (browser == "firefox")
-            {
-                driver = new FirefoxDriver((FirefoxOptions)options);
+            Type driverType = driverMap[platform];
 
-            }
-            else
+            IWebDriver driver;
+            if (platform.IsWeb())
             {
-                driver = (IWebDriver)driverType.GetConstructor(new Type[] { typeof(String), optionsMap[browser] }).Invoke(new Object[] { path, options });
+                DriverOptions options = (DriverOptions)optionsMap[platform].GetConstructor(new Type[] { }).Invoke(new Object[] { });
+                if (platform == TargetPlatform.FIREFOX)
+                {
+                    driver = new FirefoxDriver((FirefoxOptions)options);
+
+                }
+                else
+                {
+                    driver = (IWebDriver)driverType.GetConstructor(new Type[] { typeof(String), optionsMap[platform] }).Invoke(new Object[] { path, options });
+                }
             }
-            String threadName = _getThreadName();
+            else 
+            {
+                driver = (IWebDriver)driverType.GetConstructor(new Type[] { typeof(Uri), typeof(DesiredCapabilities) }).Invoke(new Object[] { new Uri(path), capabilities });
+            }
+            String threadName = GetThreadName();
             driverThreadMap.Add(threadName, driver);
                                                                       
         }
 
         public static IWebDriver Current()
         {
-            String threadName = _getThreadName();
+            String threadName = GetThreadName();
             return driverThreadMap[threadName];
         }
 
         public static void Quit() 
         {
-            String threadName = _getThreadName();
+            String threadName = GetThreadName();
             Current().Quit();
             driverThreadMap.Remove(threadName);
         }

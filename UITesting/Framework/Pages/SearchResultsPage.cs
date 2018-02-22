@@ -10,7 +10,7 @@ namespace UITesting.Framework.Pages
 {
     public class SearchResultsPage : Page
     {
-        [FindBy("css=#ss")]
+        [FindBy("css=#ss", Platform = TargetPlatform.ANY_WEB)]
         public Edit editDestination;
 
         public SearchResultsPage(IWebDriver driver):base(driver)

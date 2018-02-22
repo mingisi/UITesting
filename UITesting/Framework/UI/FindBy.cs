@@ -1,10 +1,11 @@
 ﻿using System;
 namespace UITesting.Framework.UI.Controls
 {
-    [AttributeUsage(AttributeTargets.Field)]
-    public class FindByAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
+    public class FindBy : Attribute
     {
         private readonly String locator;
+        private TargetPlatform platform = TargetPlatform.ANY;
 
         public String Locator
         {
@@ -14,8 +15,19 @@ namespace UITesting.Framework.UI.Controls
             }
         }
 
+        public TargetPlatform Platform
+        {
+            get{
+                return platform;
+            }
 
-        public FindByAttribute(String locatorString)
+            set
+            {
+                platform = value;
+            }
+        }
+
+        public FindBy(String locatorString)
         {
             this.locator = locatorString;
         }
